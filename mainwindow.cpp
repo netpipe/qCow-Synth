@@ -103,15 +103,28 @@ char *buffer2;
         }
     }
 
+
+    QByteArray result;
+    QDataStream s(result);
+
+int loops2 = 1000;
+    while (loops2 > 0) {
+      loops2--;
     //needs to find a loop somewhere then write it
     fluid_synth_write_float(synth, NUM_SAMPLES, flbuffer, 0, audio_channels, flbuffer, 0, audio_channels );
+
+
+    s << flbuffer;
+
+}
 
 //     cout << "Created samples" << endl;
 
     //copying into the buffer
     buffer = new QBuffer;
     buffer->open(QIODevice::ReadWrite);
-    buffer->write(data, 32768);
+     buffer->setData(result,NUM_FRAMES);
+    //buffer->write(data, 32768);
     buffer->seek(0);
 
 //     cout << "Filled buffer" << endl;

@@ -3,6 +3,7 @@
 #include "sfxplayer.h"
 
 #include "fluidlite.h"
+#include <stdlib.h>
 
 #define SAMPLE_RATE 44100
 #define SAMPLE_SIZE sizeof(float)
@@ -94,12 +95,23 @@ char *buffer2;
 
     char *data = (char*)malloc(32768 * sizeof(char));
 
+    char charVal[10];
+
+    //4 is mininum width, 3 is precision; float value is copied onto buff
+
+
+
     //generating a sound
     for (int i = 0; i<256; ++i)
     {
+        fluid_synth_write_float(synth, NUM_SAMPLES, flbuffer, 0, audio_channels, flbuffer, 0, audio_channels );
+// dtostrf(flbuffer, 4, 3, charVal);
+
         for (int j = 0; j<128; ++j)
         {
-            data[i * 128 + j] = (char)j;
+
+            //sprintf(charVal, "%f", flbuffer);
+            data[i * 128 + j] = (char)*flbuffer;
         }
     }
 
@@ -107,24 +119,26 @@ char *buffer2;
     QByteArray result;
     QDataStream s(result);
 
-int loops2 = 1000;
-    while (loops2 > 0) {
-      loops2--;
-    //needs to find a loop somewhere then write it
-    fluid_synth_write_float(synth, NUM_SAMPLES, flbuffer, 0, audio_channels, flbuffer, 0, audio_channels );
+//int loops2 = 500;
+//    while (loops2 > 0) {
+//      loops2--;
+//    //needs to find a loop somewhere then write it
+//    fluid_synth_write_float(synth, NUM_SAMPLES, flbuffer, 0, audio_channels, flbuffer, 0, audio_channels );
 
 
-    s << flbuffer;
+//    s << flbuffer;
 
-}
+//}
 
 //     cout << "Created samples" << endl;
 
     //copying into the buffer
     buffer = new QBuffer;
     buffer->open(QIODevice::ReadWrite);
-     buffer->setData(result,NUM_FRAMES);
-    //buffer->write(data, 32768);
+   //  buffer->setData(result,NUM_SAMPLES); //NUM_FRAMES
+    buffer->write(data, 32768);
+  //   buffer->write(result, 32768);
+
     buffer->seek(0);
 
 //     cout << "Filled buffer" << endl;

@@ -446,9 +446,9 @@ bool PianoScene::event(QEvent *event)
         {
             m_mousePressed = false;
             PianoKey* key = getKeyForPos(mouseEvent->scenePos());
-            if (key != NULL && key->isPressed()) {
+           // if (key != NULL && key->isPressed()) {
                 keyOff(key);
-            }
+           // }
         }
         break;
     }
@@ -456,7 +456,7 @@ bool PianoScene::event(QEvent *event)
         break;
     }
     qDebug() << "unprocessed event: " << event;
-    ///return QGraphicsScene::event(event);
+    return QGraphicsScene::event(event);
 }
 
 void PianoScene::allKeysOff()
